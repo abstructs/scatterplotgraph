@@ -38,7 +38,8 @@ createChart = function(data) {
   var yAxisScale = d3.scaleLinear()
       .domain([placeMin, placeMax])
       .range([50, height - margin.top - margin.bottom])
-
+  var y = d3.scaleLinear()
+      .domain([])
   var bottomAxis = d3.axisBottom(xAxisScale).tickFormat(d3.timeFormat("%M:%S"))
   var leftAxis = d3.axisLeft(yAxisScale);
   d3.select('body').select('svg')
@@ -46,8 +47,13 @@ createChart = function(data) {
       .attr('height', height)
       .attr('width', width)
       .append('g')
-      .append('rect')
       .data(data).enter()
+      .append('circle')
+      .attr('cx', margin.right + margin.left)
+      .attr('cy', )
+      .attr('r', 3)
+      .attr('stroke', 'black')
+      .attr('fill', 'red')
       //.text(function(d, i){ console.log(d.Name)})
 
   d3.select("body").select("svg")
