@@ -18,12 +18,12 @@ createChart = function(data) {
     date.setSeconds(d.Time.slice(3, 5));
     return date
   }),
-    timeMax = d3.max(data, function(d){
-      var date = new Date();
-      date.setMinutes(d.Time.slice(0, 2));
-      date.setSeconds(d.Time.slice(3, 5));
-      return date
-    });
+  timeMax = d3.max(data, function(d){
+    var date = new Date();
+    date.setMinutes(d.Time.slice(0, 2));
+    date.setSeconds(d.Time.slice(3, 5));
+    return date
+  });
   var placeMax = d3.max(data, function(d){
     return d.Place
   }),
@@ -31,29 +31,56 @@ createChart = function(data) {
    return d.Place
   });
 
+  timeMax.setSeconds(10)
+  timeMax.setMinutes(timeMax.getMinutes() + 1); // lets us add more to the x axis for better readability
+
+  console.log(timeMax)
   var xAxisScale = d3.scaleTime()
       .domain([timeMax-timeMin, 0])
       .range([0, width - margin.left - margin.right - 50])
 
   var yAxisScale = d3.scaleLinear()
-      .domain([placeMin, placeMax])
+      .domain([placeMin, placeMax + 1])
       .range([50, height - margin.top - margin.bottom])
+
   var y = d3.scaleLinear()
-      .domain([])
+      .domain([placeMin, placeMax])
+      .range([50, height - margin.top - margin.bottom - 15])
+
+  var x = d3.scaleTime()
+      .domain([timeMax, timeMin])
+      .range([70, width - margin.left - margin.right])
+
   var bottomAxis = d3.axisBottom(xAxisScale).tickFormat(d3.timeFormat("%M:%S"))
   var leftAxis = d3.axisLeft(yAxisScale);
+
   d3.select('body').select('svg')
       .style('background-color', 'white')
       .attr('height', height)
       .attr('width', width)
-      .append('g')
+  var chart = d3.select('body').select('svg');
+
+      chart.selectAll('.chart')
       .data(data).enter()
+      .append('g')
       .append('circle')
-      .attr('cx', margin.right + margin.left)
-      .attr('cy', )
+      .attr('cx', function(d, i) {
+        var date = new Date();
+        date.setMinutes(d.Time.slice(0, 2));
+        date.setSeconds(d.Time.slice(3, 5));
+        return x(date)
+      })
+      .attr('cy', function(d, i){ return y(d.Place) })
       .attr('r', 3)
       .attr('stroke', 'black')
-      .attr('fill', 'red')
+      .attr('fill', function(d, i){
+        if (d.Doping == false) {
+          return 'black'
+        }
+        else {
+          return 'red'
+        }
+      })
       //.text(function(d, i){ console.log(d.Name)})
 
   d3.select("body").select("svg")
