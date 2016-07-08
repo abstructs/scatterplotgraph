@@ -34,7 +34,6 @@ createChart = function(data) {
   timeMax.setSeconds(10)
   timeMax.setMinutes(timeMax.getMinutes() + 1); // lets us add more to the x axis for better readability
 
-  console.log(timeMax)
   var xAxisScale = d3.scaleTime()
       .domain([timeMax-timeMin, 0])
       .range([0, width - margin.left - margin.right - 50])
@@ -45,11 +44,11 @@ createChart = function(data) {
 
   var y = d3.scaleLinear()
       .domain([placeMin, placeMax])
-      .range([50, height - margin.top - margin.bottom - 15])
+      .range([45.2, height - margin.top - margin.bottom - 15])
 
   var x = d3.scaleTime()
       .domain([timeMax, timeMin])
-      .range([70, width - margin.left - margin.right])
+      .range([70.5, width - margin.left - margin.right + 20])
 
   var bottomAxis = d3.axisBottom(xAxisScale).tickFormat(d3.timeFormat("%M:%S"))
   var leftAxis = d3.axisLeft(yAxisScale);
